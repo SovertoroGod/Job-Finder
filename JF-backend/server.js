@@ -2,6 +2,8 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./config/db');
+const fs = require("fs");
+const path = require("path");
 
 dotenv.config();
 
@@ -10,8 +12,17 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.get('/', (req, res) => {
-    res.send("API is running");
+const routePath = path.join(__dirname, "./routes");
+
+fs.readdirSync(routePath).forEach((file) => {
+  if (file.endsWith(".js")) {
+    const route = require(path.join(routePath, file));
+    app.use("/api", route);
+  }
+});
+
+app.get("/", (req, res) => {
+  res.send("API is running");
 });
 
 const PORT = process.env.PORT || 5000;
