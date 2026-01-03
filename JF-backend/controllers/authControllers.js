@@ -4,26 +4,32 @@ const { matchedData } = require("express-validator");
 
 exports.registerUser = async (req, res) => {
   try {
-    const data = matchedData(req, { locations: "body" });
-    const { name, email, password, role } = data;
+    const data = matchedData(req, { locations: ["body"] });
+    const { name, email, password, role, companyName } = data;
     const userExit = await User.findOne({ email });
 
-    if (userExit)
-      return res
-        .status(400)
-        .json({ success: false, message: "User is already exists" });
+    if (userExit) {
+      return res.status(400).json({
+        success: false,
+        message: "User already exists",
+      });
+    }
 
     const user = await User.create({
       name,
       email,
       password,
       role: role || "Candidate",
+      companyName: role === "Recruiter" ? companyName : undefined,
     });
+
+    const userResponse = user.toObject();
+    delete userResponse.password;
 
     res.status(201).json({
       success: true,
       message: "Register Successful",
-      data: user,
+      data: userResponse,
     });
   } catch (error) {
     res.status(500).json({
@@ -36,7 +42,7 @@ exports.registerUser = async (req, res) => {
 
 exports.loginUser = async (req, res) => {
   try {
-    const data = matchedData(req, { locations: "body" });
+    const data = matchedData(req, { locations: ["body"] });
     const { email, password } = data;
     const user = await User.findOne({ email });
 

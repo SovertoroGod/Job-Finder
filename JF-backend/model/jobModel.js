@@ -18,10 +18,6 @@ const jobSchema = mongoose.Schema({
         type: String,
         required: [true, "Please fill description"]
     },
-    companyName: {
-        type: String,
-        required: [true, "Please fill company name"],
-    },
     jobType: {
         type: String,
         enum: ['Full-time', 'Part-time', 'Contract', 'Internship', 'Freelance'],
@@ -59,7 +55,8 @@ const jobSchema = mongoose.Schema({
         default: 'active'
     },
     deadline: {
-        type: Date
+        type: Date,
+        required: true
     },
     isDeleted: {
         type: Boolean,
@@ -72,8 +69,9 @@ const jobSchema = mongoose.Schema({
     }
 }, { timestamps: true });
 
-
 // allows users to search by text in the title or description
 jobSchema.index({ title: 'text', description: "text" });
+
+// job tway myar yin shr ya tr performance kya ml cuz recruiter: 1 is for sorting and isDeleted : 1 is second layer
 jobSchema.index({ recruiter: 1, isDeleted: 1 });
 module.exports = mongoose.model("Job", jobSchema);

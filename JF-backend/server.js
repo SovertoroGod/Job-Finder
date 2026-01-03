@@ -4,6 +4,7 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 const fs = require("fs");
 const path = require("path");
+const { initCronJobs } = require("./utils/scheduleStatus");
 
 dotenv.config();
 
@@ -11,7 +12,7 @@ connectDB();
 const app = express();
 app.use(express.json());
 app.use(cors());
-
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 const routePath = path.join(__dirname, "./routes");
 
 fs.readdirSync(routePath).forEach((file) => {
@@ -21,6 +22,7 @@ fs.readdirSync(routePath).forEach((file) => {
   }
 });
 
+initCronJobs();
 app.get("/", (req, res) => {
   res.send("API is running");
 });
@@ -28,5 +30,7 @@ app.get("/", (req, res) => {
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-    console.log(`Server is running in ${process.env.NODE_ENV} mode on port ${PORT}`);
-})
+  console.log(
+    `Server is running in ${process.env.NODE_ENV} mode on port ${PORT}`
+  );
+});

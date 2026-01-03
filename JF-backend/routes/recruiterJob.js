@@ -5,15 +5,15 @@ const { createJobs, getRecruiterJob, updateJobs, deleteJobs } = require("./../co
 const express = require("express");
 
 const router = express.Router();
-router.use(protect);
+// router.use(protect);
 // router.use(authorizeRoles("Recruiter"))
 
-router.post('/recruiter/create-job',authorizeRoles("Recruiter"), jobValidationRule, handleValidateErrors, createJobs);
+router.post('/recruiter/create-job',protect,authorizeRoles("Recruiter"), jobValidationRule, handleValidateErrors, createJobs);
 
-router.get('/recruiter/get-job',authorizeRoles("Recruiter"), getRecruiterJob);
+router.get('/recruiter/get-job',protect,authorizeRoles("Recruiter"), getRecruiterJob);
 
-router.put('/recruiter/:id/edit-job',authorizeRoles("Recruiter"), jobValidationRule, handleValidateErrors, updateJobs);
+router.put("/recruiter/:id/edit-job",protect, authorizeRoles("Recruiter"), updateJobs);
 
-router.delete('/recruiter/:id/delete-job',authorizeRoles("Recruiter"), deleteJobs);
+router.delete('/recruiter/:id/delete-job',protect,authorizeRoles("Recruiter"), deleteJobs);
 
 module.exports = router;
