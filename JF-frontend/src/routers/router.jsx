@@ -12,7 +12,10 @@ import RecruiterRoute from "./RecruiterRoute";
 import RecruiterDashboard from "../pages/recruiter/RecruiterDashboard";
 import AdminRoute from "./AdminRoute";
 import AdminDashboard from "../pages/admin/AdminDashboard";
+import AdminJobs from "../pages/admin/AdminJobs";
+import AdminUsers from "../pages/admin/AdminUsers";
 import JobsLists from "../pages/jobs/JobsLists";
+import AdminLayout from "../layouts/AdminLayout";
 
 export default function AppRouter() {
     return (
@@ -45,7 +48,11 @@ export default function AppRouter() {
 
 
                 <Route element={<AdminRoute />}>
-                    <Route path="/admin-dashboard" element={<AdminDashboard />} />
+                    <Route path="/admin" element={<AdminLayout />}>
+                        <Route index element={<AdminDashboard />} />
+                        <Route path="jobs" element={<AdminJobs />} />
+                        <Route path="users" element={<AdminUsers />} />
+                    </Route>
                 </Route>
 
                 <Route path="/unauthorized" element={<Unauthorized />} />
